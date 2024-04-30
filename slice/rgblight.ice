@@ -1,4 +1,6 @@
 #pragma once
+#include "light.ice"
+#include "preset.ice"
 
 module SmartHome {
 
@@ -7,6 +9,12 @@ module SmartHome {
         short minValue;
         short maxValue;
         string message = "Value out of bounds";
+    }
+
+    struct Color {
+        short red;
+        short green;
+        short blue;
     }
 
     enum RgbLightOperation {
@@ -19,22 +27,17 @@ module SmartHome {
         string presetName;
     }
 
-    struct Color {
-        short red;
-        short green;
-        short blue;
-    }
+    dictionary<string, Color> ColorPresets;
 
-    dictionary<string, Color> Presets;
-
-    interface RgbLight {
-        idempotent void turnOn();
-        idempotent void turnOff();
+    interface RgbLight extends Light {
         idempotent Color getColor();
-        idempotent void changeColor() throws InvalidColorRangeException;
-        idempotent Presets getPresets();
-        void addPreset(string name, Color color);
-        idempotent void editPreset(string name, Color color);
+        idempotent Color changeColor(RgbLightRequest request)
+            throws InvalidColorRangeException, NonExistentPreset;
+        idempotent ColorPresets getPresets();
+        void addPreset(string name, Color color)
+            throws InvalidColorRangeException;
+        idempotent void editPreset(string name, Color color)
+            throws InvalidColorRangeException;
         idempotent void removePreset(string name);
     }
 

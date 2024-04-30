@@ -1,11 +1,12 @@
 #pragma once
+#include "preset.ice"
 
 module SmartHome {
 
     exception InvalidTemperatureRangeException {
-        short badValue;
-        short minValue; //  10
-        short maxValue; //  35
+        float badValue;
+        float minValue; //  10.0
+        float maxValue; //  35.0
         string message = "Value out of bounds";
     }
 
@@ -19,14 +20,17 @@ module SmartHome {
         string presetName;
     }
 
-    dictionary<string, float> Presets;
+    dictionary<string, float> TemperaturePresets;
 
     interface Thermostat {
         idempotent float getTemperature();
-        idempotent void setTemperature(ThermostatRequest request);
-        idempotent Presets getPresets();
-        void addPreset(string name, float temperature);
-        idempotent editPreset(string name, float temperature);
+        idempotent float setTemperature(ThermostatRequest request)
+            throws InvalidTemperatureRangeException, NonExistentPreset;
+        idempotent TemperaturePresets getPresets();
+        void addPreset(string name, float temperature)
+            throws InvalidTemperatureRangeException;
+        idempotent void editPreset(string name, float temperature)
+            throws InvalidTemperatureRangeException;
         idempotent void removePreset(string name);
     }
 
