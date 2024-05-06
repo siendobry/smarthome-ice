@@ -1,164 +1,56 @@
 import sys, Ice
 import generated.SmartHome as SmartHome
+from request_handler import RequestHandler
 
+# TODO: Implement operation not supported exception
 if __name__ == '__main__':
     with Ice.initialize(sys.argv) as communicator:
-        bedroomBlindsBase = communicator.propertyToProxy("BedroomBlinds.Proxy")
-        entranceGateBase = communicator.propertyToProxy("EntranceGate.Proxy")
-        garageGateBase = communicator.propertyToProxy("GarageGate.Proxy")
-        bedroomLightBase = communicator.propertyToProxy("BedroomLight.Proxy")
-        deskRgbLightBase = communicator.propertyToProxy("DeskRgbLight.Proxy")
-        thermostatBase = communicator.propertyToProxy("Thermostat.Proxy")
-        deviceInfoBase = communicator.propertyToProxy("DeviceInfo.Proxy")
+        requestHandler = RequestHandler(communicator)
 
-        bedroomBlinds = SmartHome.CloseablePrx.checkedCast(bedroomBlindsBase)
-        entranceGate = SmartHome.CloseablePrx.checkedCast(entranceGateBase)
-        garageGate = SmartHome.CloseablePrx.checkedCast(garageGateBase)
-        bedroomLight = SmartHome.LightPrx.checkedCast(bedroomLightBase)
-        deskRgbLight = SmartHome.RgbLightPrx.checkedCast(deskRgbLightBase)
-        thermostat = SmartHome.ThermostatPrx.checkedCast(thermostatBase)
-        deviceInfo = SmartHome.DeviceInfoPrx.checkedCast(deviceInfoBase)
+        print("> ", end='')
+        command = input()
 
-        if (       not bedroomBlinds
-                or not entranceGate
-                or not garageGate
-                or not bedroomLight
-                or not deskRgbLight
-                or not thermostat):
-            raise RuntimeError("Invalid proxy")
-
-        command = True
-        while command is not None:
+        while command is not None and command != '':
             try:
-                print("> ", end='')
-                command = input()
+                device, *params = command.split(' ')
+                operation = None
 
-                commandParts = command.split(' ')
+                if len(params) > 0:
+                    operation = params[0]
+                    params = params[1:]
+
                 result = None
 
-                match commandParts[0]:
-                    case "bedroom/blinds":
-                        match commandParts[1]:
-                            case "open":
-                                result = bedroomBlinds.open()
-                            case "close":
-                                result = bedroomBlinds.close()
-                            case "state":
-                                result = bedroomBlinds.getState()
-                            case _:
-                                print("Error: Unknown command")
+                if device.find("blind") != -1 or device.find("gate") != -1:
+                    result = requestHandler.handle_closeable(device, operation)
+                elif device.find("light") != -1:
+                    result = requestHandler.handle_light(device, operation)
+                elif device.find("rgb") != -1:
+                    result = requestHandler.handle_rgb(device, operation, params)
+                elif device.find("thermostat") != -1:
+                    result = requestHandler.handle_thermostat(device, operation, params)
+                elif device.find("devices") != -1:
+                    result = requestHandler.handle_info(device)
+                else:
+                    raise Exception(f"{device} is not a proper identifier.")
 
-                    case "entrance/gate":
-                        match commandParts[1]:
-                            case "open":
-                                result = entranceGate.open()
-                            case "close":
-                                result = entranceGate.close()
-                            case "state":
-                                result = bedroomBlinds.getState()
-                            case _:
-                                print("Error: Unknown command")
+                print(result)
 
-                    case "garage/gate":
-                        match commandParts[1]:
-                            case "open":
-                                result = garageGate.open()
-                            case "close":
-                                result = garageGate.close()
-                            case "state":
-                                result = bedroomBlinds.getState()
-                            case _:
-                                print("Error: Unknown command")
-
-                    case "bedroom/light":
-                        match commandParts[1]:
-                            case "on":
-                                result = bedroomLight.turnOn()
-                            case "off":
-                                result = bedroomLight.turnOff()
-                            case "state":
-                                result = bedroomBlinds.getState()
-                            case _:
-                                print("Error: Unknown command")
-
-                    case "desk/rgb":
-                        match commandParts[1]:
-                            case "on":
-                                result = deskRgbLight.turnOn()
-                            case "off":
-                                result = deskRgbLight.turnOff()
-                            case "state":
-                                result = deskRgbLight.getState()
-                            case "getColor":
-                                result = deskRgbLight.getColor()
-                            case "setColor":
-                                red, green, blue = [int(x) for x in commandParts[2].split('/')]
-                                request = SmartHome.RgbLightRequest(
-                                    SmartHome.RgbLightOperation.CLASSIC,
-                                    color=SmartHome.Color(red, green, blue))
-                                result = deskRgbLight.changeColor(request)
-                            case "setPresetColor":
-                                presetName = commandParts[2]
-                                request = SmartHome.RgbLightRequest(
-                                    SmartHome.RgbLightOperation.PRESET,
-                                    presetName=presetName)
-                                result = deskRgbLight.changeColor(request)
-                            case "getPresets":
-                                result = deskRgbLight.getPresets()
-                            case "addPreset":
-                                presetName = commandParts[2]
-                                red, green, blue = [int(x) for x in commandParts[3].split('/')]
-                                deskRgbLight.addPreset(presetName, SmartHome.Color(red, green, blue))
-                            case "editPreset":
-                                presetName = commandParts[2]
-                                red, green, blue = [int(x) for x in commandParts[3].split('/')]
-                                deskRgbLight.addPreset(presetName, SmartHome.Color(red, green, blue))
-                            case "removePreset":
-                                presetName = commandParts[2]
-                                deskRgbLight.removePreset(presetName)
-                            case _:
-                                print("Error: Unknown command")
-
-                    case "household/thermostat":
-                        match commandParts[1]:
-                            case "getTemp":
-                                result = thermostat.getTemperature()
-                            case "setTemp":
-                                temperature = float(commandParts[2])
-                                request = SmartHome.ThermostatRequest(
-                                    SmartHome.ThermostatOperation.CLASSIC,
-                                    temperature=temperature)
-                                result = thermostat.setTemperature(request)
-                            case "setPresetTemp":
-                                presetName = commandParts[2]
-
-                                request = SmartHome.ThermostatRequest(
-                                    SmartHome.ThermostatOperation.PRESET,
-                                    presetName=presetName)
-                                result = thermostat.setTemperature(request)
-                            case "getPresets":
-                                result = thermostat.getPresets()
-                            case "addPreset":
-                                presetName = commandParts[2]
-                                temperature = float(commandParts[3])
-                                thermostat.addPreset(presetName, temperature)
-                            case "editPreset":
-                                presetName = commandParts[2]
-                                temperature = float(commandParts[3])
-                                thermostat.editPreset(presetName, temperature)
-                            case "removePreset":
-                                presetName = commandParts[2]
-                                thermostat.removePreset(presetName)
-                            case _:
-                                print("Error: Unknown command")
-
-                    case "devices":
-                        result = deviceInfo.getDevices()
-
-                    case _:
-                        print("Error: Unknown command")
-
-                print(f"Command: {command}; Result: {result}")
-
+            except Ice.ObjectNotExistException as ex:
+                # print(f"ObjectNotExistException: Object '{ex.id.category}/{ex.id.name}' does not exist.")
+                print(f"ObjectNotExistException: Device with identifier '{ex.id.category}/{ex.id.name}' does not exist on specified floor.")
+            except Ice.NotRegisteredException as ex:
+                # print(f"NotRegisteredException: Object of type '{ex.kindOfObject}' with id '{ex.id}' is not registered")
+                print(f"NotRegisteredException: Specified floor is not registered")
+            except SmartHome.NonExistentPreset as ex: # TODO: Change name to include Exception suffix
+                print(f"NonExistentPreset: Preset ex.badName does not exist.")
+            except SmartHome.InvalidColorRangeException as ex:
+                print(f"InvalidColorRangeException: value '{ex.badValue}' is out of range ({ex.minValue}-{ex.maxValue})")
+            except SmartHome.InvalidTemperatureRangeException as ex:
+                print(f"InvalidTemperatureRangeException: value '{ex.badValue}' is out of range ({ex.minValue}-{ex.maxValue})")
             except Exception as ex:
                 print(ex)
+
+            finally:
+                print("> ", end='')
+                command = input()

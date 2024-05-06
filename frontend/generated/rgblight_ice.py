@@ -304,17 +304,17 @@ if 'RgbLightPrx' not in _M_SmartHome.__dict__:
         def end_getColor(self, _r):
             return _M_SmartHome.RgbLight._op_getColor.end(self, _r)
 
-        def changeColor(self, request, context=None):
-            return _M_SmartHome.RgbLight._op_changeColor.invoke(self, ((request, ), context))
+        def setColor(self, request, context=None):
+            return _M_SmartHome.RgbLight._op_setColor.invoke(self, ((request, ), context))
 
-        def changeColorAsync(self, request, context=None):
-            return _M_SmartHome.RgbLight._op_changeColor.invokeAsync(self, ((request, ), context))
+        def setColorAsync(self, request, context=None):
+            return _M_SmartHome.RgbLight._op_setColor.invokeAsync(self, ((request, ), context))
 
-        def begin_changeColor(self, request, _response=None, _ex=None, _sent=None, context=None):
-            return _M_SmartHome.RgbLight._op_changeColor.begin(self, ((request, ), _response, _ex, _sent, context))
+        def begin_setColor(self, request, _response=None, _ex=None, _sent=None, context=None):
+            return _M_SmartHome.RgbLight._op_setColor.begin(self, ((request, ), _response, _ex, _sent, context))
 
-        def end_changeColor(self, _r):
-            return _M_SmartHome.RgbLight._op_changeColor.end(self, _r)
+        def end_setColor(self, _r):
+            return _M_SmartHome.RgbLight._op_setColor.end(self, _r)
 
         def getPresets(self, context=None):
             return _M_SmartHome.RgbLight._op_getPresets.invoke(self, ((), context))
@@ -396,8 +396,8 @@ if 'RgbLightPrx' not in _M_SmartHome.__dict__:
         def getColor(self, current=None):
             raise NotImplementedError("servant method 'getColor' not implemented")
 
-        def changeColor(self, request, current=None):
-            raise NotImplementedError("servant method 'changeColor' not implemented")
+        def setColor(self, request, current=None):
+            raise NotImplementedError("servant method 'setColor' not implemented")
 
         def getPresets(self, current=None):
             raise NotImplementedError("servant method 'getPresets' not implemented")
@@ -420,7 +420,7 @@ if 'RgbLightPrx' not in _M_SmartHome.__dict__:
     RgbLight._ice_type = _M_SmartHome._t_RgbLightDisp
 
     RgbLight._op_getColor = IcePy.Operation('getColor', Ice.OperationMode.Idempotent, Ice.OperationMode.Idempotent, False, None, (), (), (), ((), _M_SmartHome._t_Color, False, 0), ())
-    RgbLight._op_changeColor = IcePy.Operation('changeColor', Ice.OperationMode.Idempotent, Ice.OperationMode.Idempotent, False, None, (), (((), _M_SmartHome._t_RgbLightRequest, False, 0),), (), ((), _M_SmartHome._t_Color, False, 0), (_M_SmartHome._t_InvalidColorRangeException, _M_SmartHome._t_NonExistentPreset))
+    RgbLight._op_setColor = IcePy.Operation('setColor', Ice.OperationMode.Idempotent, Ice.OperationMode.Idempotent, False, None, (), (((), _M_SmartHome._t_RgbLightRequest, False, 0),), (), ((), _M_SmartHome._t_Color, False, 0), (_M_SmartHome._t_InvalidColorRangeException, _M_SmartHome._t_NonExistentPreset))
     RgbLight._op_getPresets = IcePy.Operation('getPresets', Ice.OperationMode.Idempotent, Ice.OperationMode.Idempotent, False, None, (), (), (), ((), _M_SmartHome._t_ColorPresets, False, 0), ())
     RgbLight._op_addPreset = IcePy.Operation('addPreset', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0), ((), _M_SmartHome._t_Color, False, 0)), (), None, (_M_SmartHome._t_InvalidColorRangeException,))
     RgbLight._op_editPreset = IcePy.Operation('editPreset', Ice.OperationMode.Idempotent, Ice.OperationMode.Idempotent, False, None, (), (((), IcePy._t_string, False, 0), ((), _M_SmartHome._t_Color, False, 0)), (), None, (_M_SmartHome._t_InvalidColorRangeException,))
