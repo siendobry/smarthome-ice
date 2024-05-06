@@ -19,7 +19,7 @@ public interface RgbLight extends Light
 {
     Color getColor(com.zeroc.Ice.Current current);
 
-    Color changeColor(RgbLightRequest request, com.zeroc.Ice.Current current)
+    Color setColor(RgbLightRequest request, com.zeroc.Ice.Current current)
         throws InvalidColorRangeException,
                NonExistentPreset;
 
@@ -84,7 +84,7 @@ public interface RgbLight extends Light
      * @return -
      * @throws com.zeroc.Ice.UserException -
     **/
-    static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_changeColor(RgbLight obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
+    static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_setColor(RgbLight obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
         throws com.zeroc.Ice.UserException
     {
         com.zeroc.Ice.Object._iceCheckMode(com.zeroc.Ice.OperationMode.Idempotent, current.mode);
@@ -92,7 +92,7 @@ public interface RgbLight extends Light
         RgbLightRequest iceP_request;
         iceP_request = RgbLightRequest.ice_read(istr);
         inS.endReadParams();
-        Color ret = obj.changeColor(iceP_request, current);
+        Color ret = obj.setColor(iceP_request, current);
         com.zeroc.Ice.OutputStream ostr = inS.startWriteParams();
         Color.ice_write(ostr, ret);
         inS.endWriteParams(ostr);
@@ -183,7 +183,6 @@ public interface RgbLight extends Light
     final static String[] _iceOps =
     {
         "addPreset",
-        "changeColor",
         "editPreset",
         "getColor",
         "getPresets",
@@ -193,6 +192,7 @@ public interface RgbLight extends Light
         "ice_isA",
         "ice_ping",
         "removePreset",
+        "setColor",
         "turnOff",
         "turnOn"
     };
@@ -216,43 +216,43 @@ public interface RgbLight extends Light
             }
             case 1:
             {
-                return _iceD_changeColor(this, in, current);
+                return _iceD_editPreset(this, in, current);
             }
             case 2:
             {
-                return _iceD_editPreset(this, in, current);
+                return _iceD_getColor(this, in, current);
             }
             case 3:
             {
-                return _iceD_getColor(this, in, current);
+                return _iceD_getPresets(this, in, current);
             }
             case 4:
             {
-                return _iceD_getPresets(this, in, current);
+                return Light._iceD_getState(this, in, current);
             }
             case 5:
             {
-                return Light._iceD_getState(this, in, current);
+                return com.zeroc.Ice.Object._iceD_ice_id(this, in, current);
             }
             case 6:
             {
-                return com.zeroc.Ice.Object._iceD_ice_id(this, in, current);
+                return com.zeroc.Ice.Object._iceD_ice_ids(this, in, current);
             }
             case 7:
             {
-                return com.zeroc.Ice.Object._iceD_ice_ids(this, in, current);
+                return com.zeroc.Ice.Object._iceD_ice_isA(this, in, current);
             }
             case 8:
             {
-                return com.zeroc.Ice.Object._iceD_ice_isA(this, in, current);
+                return com.zeroc.Ice.Object._iceD_ice_ping(this, in, current);
             }
             case 9:
             {
-                return com.zeroc.Ice.Object._iceD_ice_ping(this, in, current);
+                return _iceD_removePreset(this, in, current);
             }
             case 10:
             {
-                return _iceD_removePreset(this, in, current);
+                return _iceD_setColor(this, in, current);
             }
             case 11:
             {

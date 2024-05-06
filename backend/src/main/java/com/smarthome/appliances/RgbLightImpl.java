@@ -20,7 +20,7 @@ public class RgbLightImpl extends LightImpl implements SmartHome.RgbLight {
     }
 
     @Override
-    public Color changeColor(RgbLightRequest request, Current current) throws InvalidColorRangeException, NonExistentPreset {
+    synchronized public Color setColor(RgbLightRequest request, Current current) throws InvalidColorRangeException, NonExistentPreset {
         color = switch (request.operation) {
             case CLASSIC -> {
                 for (short rgbValue : new short[]{request.color.red, request.color.green, request.color.blue}) {
@@ -54,7 +54,7 @@ public class RgbLightImpl extends LightImpl implements SmartHome.RgbLight {
     }
 
     @Override
-    public void addPreset(String name, Color color, Current current) throws InvalidColorRangeException {
+    synchronized public void addPreset(String name, Color color, Current current) throws InvalidColorRangeException {
         for (short rgbValue : new short[]{color.red, color.green, color.blue}) {
             if (rgbValue < 0 || rgbValue > 255) {
                 throw new InvalidColorRangeException(
@@ -69,7 +69,7 @@ public class RgbLightImpl extends LightImpl implements SmartHome.RgbLight {
     }
 
     @Override
-    public void editPreset(String name, Color color, Current current) throws InvalidColorRangeException {
+    synchronized public void editPreset(String name, Color color, Current current) throws InvalidColorRangeException {
         for (short rgbValue : new short[]{color.red, color.green, color.blue}) {
             if (rgbValue < 0 || rgbValue > 255) {
                 throw new InvalidColorRangeException(
@@ -84,7 +84,7 @@ public class RgbLightImpl extends LightImpl implements SmartHome.RgbLight {
     }
 
     @Override
-    public void removePreset(String name, Current current) {
+    synchronized public void removePreset(String name, Current current) {
         presets.remove(name);
     }
 }

@@ -19,7 +19,7 @@ public class ThermostatImpl implements SmartHome.Thermostat {
     }
 
     @Override
-    public float setTemperature(ThermostatRequest request, Current current) throws InvalidTemperatureRangeException, NonExistentPreset {
+    synchronized public float setTemperature(ThermostatRequest request, Current current) throws InvalidTemperatureRangeException, NonExistentPreset {
         temperature = switch (request.operation) {
             case CLASSIC -> {
                 if (request.temperature < 10f || request.temperature > 35f) {
@@ -51,7 +51,7 @@ public class ThermostatImpl implements SmartHome.Thermostat {
     }
 
     @Override
-    public void addPreset(String name, float temperature, Current current) throws InvalidTemperatureRangeException {
+    synchronized public void addPreset(String name, float temperature, Current current) throws InvalidTemperatureRangeException {
         if (temperature < 10f || temperature > 35f) {
             throw new InvalidTemperatureRangeException(
                 temperature,
@@ -64,7 +64,7 @@ public class ThermostatImpl implements SmartHome.Thermostat {
     }
 
     @Override
-    public void editPreset(String name, float temperature, Current current) throws InvalidTemperatureRangeException {
+    synchronized public void editPreset(String name, float temperature, Current current) throws InvalidTemperatureRangeException {
         if (temperature < 10f || temperature > 35f) {
             throw new InvalidTemperatureRangeException(
                 temperature,
@@ -77,7 +77,7 @@ public class ThermostatImpl implements SmartHome.Thermostat {
     }
 
     @Override
-    public void removePreset(String name, Current current) {
+    synchronized public void removePreset(String name, Current current) {
         presets.remove(name);
     }
 }

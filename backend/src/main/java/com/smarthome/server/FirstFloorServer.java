@@ -5,25 +5,25 @@ import com.zeroc.Ice.*;
 
 import java.lang.Exception;
 
-public class SecondFloorServer extends AbstractServer {
+public class FirstFloorServer extends AbstractServer {
 
     public static void main(String[] args) {
-        SecondFloorServer smartHomeServer = new SecondFloorServer();
+        FirstFloorServer smartHomeServer = new FirstFloorServer();
         smartHomeServer.start(args);
     }
 
     public void start(String[] args) {
         try (Communicator communicator = Util.initialize(args)) {
-            adapter = communicator.createObjectAdapter("SecondFloor");
+            adapter = communicator.createObjectAdapter("FirstFloor");
 
-            Blind bedroomBlinds = new Blind();
-            LightImpl bedroomLight = new LightImpl();
-            RgbLightImpl deskRgbLight = new RgbLightImpl();
+            Gate entranceGate = new Gate();
+            Gate garageGate = new Gate();
+            ThermostatImpl thermostat = new ThermostatImpl();
             DeviceInfoImpl deviceInfo = new DeviceInfoImpl(identityList);
 
-            addServantMapping(bedroomBlinds, new Identity("blinds", "bedroom"));
-            addServantMapping(bedroomLight, new Identity("lights", "bedroom"));
-            addServantMapping(deskRgbLight, new Identity("desk-rgb", "office"));
+            addServantMapping(entranceGate, new Identity("gate", "entrance"));
+            addServantMapping(garageGate, new Identity("gate", "garage"));
+            addServantMapping(thermostat, new Identity("thermostat", "household"));
             adapter.add(deviceInfo, new Identity("devices", null));
 
             adapter.activate();

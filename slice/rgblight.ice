@@ -31,7 +31,7 @@ module SmartHome {
 
     interface RgbLight extends Light {
         idempotent Color getColor();
-        idempotent Color changeColor(RgbLightRequest request)
+        idempotent Color setColor(RgbLightRequest request)
             throws InvalidColorRangeException, NonExistentPreset;
         idempotent ColorPresets getPresets();
         void addPreset(string name, Color color)

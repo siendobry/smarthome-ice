@@ -54,20 +54,20 @@ public interface RgbLightPrx extends LightPrx
         return f;
     }
 
-    default Color changeColor(RgbLightRequest request)
+    default Color setColor(RgbLightRequest request)
         throws InvalidColorRangeException,
                NonExistentPreset
     {
-        return changeColor(request, com.zeroc.Ice.ObjectPrx.noExplicitContext);
+        return setColor(request, com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default Color changeColor(RgbLightRequest request, java.util.Map<String, String> context)
+    default Color setColor(RgbLightRequest request, java.util.Map<String, String> context)
         throws InvalidColorRangeException,
                NonExistentPreset
     {
         try
         {
-            return _iceI_changeColorAsync(request, context, true).waitForResponseOrUserEx();
+            return _iceI_setColorAsync(request, context, true).waitForResponseOrUserEx();
         }
         catch(InvalidColorRangeException ex)
         {
@@ -83,14 +83,14 @@ public interface RgbLightPrx extends LightPrx
         }
     }
 
-    default java.util.concurrent.CompletableFuture<Color> changeColorAsync(RgbLightRequest request)
+    default java.util.concurrent.CompletableFuture<Color> setColorAsync(RgbLightRequest request)
     {
-        return _iceI_changeColorAsync(request, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+        return _iceI_setColorAsync(request, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<Color> changeColorAsync(RgbLightRequest request, java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<Color> setColorAsync(RgbLightRequest request, java.util.Map<String, String> context)
     {
-        return _iceI_changeColorAsync(request, context, false);
+        return _iceI_setColorAsync(request, context, false);
     }
 
     /**
@@ -100,9 +100,9 @@ public interface RgbLightPrx extends LightPrx
      * @param sync -
      * @return -
      **/
-    default com.zeroc.IceInternal.OutgoingAsync<Color> _iceI_changeColorAsync(RgbLightRequest iceP_request, java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<Color> _iceI_setColorAsync(RgbLightRequest iceP_request, java.util.Map<String, String> context, boolean sync)
     {
-        com.zeroc.IceInternal.OutgoingAsync<Color> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "changeColor", com.zeroc.Ice.OperationMode.Idempotent, sync, _iceE_changeColor);
+        com.zeroc.IceInternal.OutgoingAsync<Color> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "setColor", com.zeroc.Ice.OperationMode.Idempotent, sync, _iceE_setColor);
         f.invoke(true, context, null, ostr -> {
                      RgbLightRequest.ice_write(ostr, iceP_request);
                  }, istr -> {
@@ -114,7 +114,7 @@ public interface RgbLightPrx extends LightPrx
     }
 
     /** @hidden */
-    static final Class<?>[] _iceE_changeColor =
+    static final Class<?>[] _iceE_setColor =
     {
         InvalidColorRangeException.class,
         NonExistentPreset.class

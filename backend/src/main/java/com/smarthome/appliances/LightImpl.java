@@ -7,13 +7,13 @@ public class LightImpl implements SmartHome.Light {
     private boolean isTurnedOn = false;
 
     @Override
-    public boolean turnOn(Current current) {
+    synchronized public boolean turnOn(Current current) {
         isTurnedOn = true;
         return true;
     }
 
     @Override
-    public boolean turnOff(Current current) {
+    synchronized public boolean turnOff(Current current) {
         isTurnedOn = false;
         return true;
     }
